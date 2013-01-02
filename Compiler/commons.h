@@ -4,7 +4,7 @@
 #include <map>
 #include <iostream>
 
-const static enum token_type   // 符号类型
+const static enum token_type   //词法分析是词的类型
 {
 	// 前面的一部分都是作为保留字，后面的一部分是类别，这样写主要是为了查找判断方便。
 	CONSTTK,INTTK,CHARTK,VOIDTK,   
@@ -17,21 +17,25 @@ const static enum token_type   // 符号类型
 
 	IDEN,INTCON,CHARCON,STRCON,
 	UNKNOWN, // 这一个用来表示分析到未知字符
-	ENDOFFILE
+	ENDOFFILE  // 表示到达文件结尾
 };
 
-/*
-class Error
+// 定义符号的类型
+const static enum symbol_kind
 {
-public:
-	Error();
-	// 错误处理函数
-	void error(int line,int error_num);
-
-private:
-	map<int,string> error_types; // 在这个map中添加所有的错误
+	CONST,			// 常量
+	VARIABLE,		// 变量
+	ARRAY,			// 这里特别加入一个array的类型，方便区分，并且array只有可能是变量
+	FUNCTION,		// 函数
+	PARAM,			// 参数
+	NK				// 未知
 };
 
-*/
+const static enum symbol_type
+{
+	INT,
+	CHAR,
+	NT
+};
 
 #endif

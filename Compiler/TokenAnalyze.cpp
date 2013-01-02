@@ -92,19 +92,34 @@ void TokenAnalyze::initialize()
 	token_typename.insert(make_pair(RBRACE,"RBRACE"));
 }
 
+
+/*
 //TokenAnalyse构造函数，主要是完成关于初始化相关的工作
 TokenAnalyze::TokenAnalyze(string input)
 {
 	filein.open(input.c_str());
+	if(!filein)
+	{
+		error_handler.error(1,0);  // 文件不存在的时候报错
+	}
+
 	ofstream fileout("out.txt");
 	initialize();
 	line_number = 1;  // 最开始打开文件的时候，处于第一行
 }
 
+*/
+// 构造函数
+TokenAnalyze::TokenAnalyze()
+{
+	initialize();
+	line_number = 1;
+}
 
 // 获取下一个词，返回的类型为Token
 Token TokenAnalyze::next_token()
 {
+	
 	if(!ahead_list.empty())  // 当aheadlist不是空的时候，从这里读取
 	{
 		Token temp = ahead_list.front();
@@ -140,17 +155,50 @@ bool TokenAnalyze::has_tokens()
 }
 
 // 超前读取一个字符
-Token TokenAnalyze::look_ahead()
+list<Token> TokenAnalyze::look_ahead(int num)  // 这里的num表示要读取的个数
 {
-	Token temp = _next_token(); // 临时保存
-	ahead_list.push_back(temp);
+	//Token temp = _next_token(); // 临时保存
+	//ahead_list.push_back(temp);
+	//return temp;
+	list<Token> temp;
+	int i = 0;
+	for(list<Token>::iterator iter = ahead_list.begin();i < ahead_list.size() && i < num;iter ++,i ++)
+	{
+		temp.push_back((*iter)); // 这里将所有的量放到temp
+	}
+
+	if((i + 1)!= ahead_list.size())   // 说明没有读取足够的Token
+	{
+		for(;i < num;i ++)
+		{
+			Token tmp = _next_token();
+			ahead_list.push_back(tmp);
+			temp.push_back(tmp);
+		}
+	}
 	return temp;
+}
+
+// 装载文件
+void TokenAnalyze::load_file(string file)
+{
+	filein.open(file.c_str());
+	if(!filein)  // 打开文件失败
+	{
+		error_handler.error(1,0);
+	}
 }
 
 
 // 私有读取下一个词语的方法
 Token TokenAnalyze::_next_token()
 {
+	if(!filein)  // 输入流打开错误
+	{
+		return Token("",token_type::ENDOFFILE,line_number);
+	}
+
+
 	char ch;
 	// 首先过滤空白符
 	while(filein.get(ch) && is_space(ch))
@@ -277,38 +325,75 @@ Token TokenAnalyze::number(char ch)
 	return Token(value,token_type::INTCON,line_number);
 }
 
+/*********************************************************************/
+
+// 考虑一下，这里对于字符串和字符的返回直接就返回带有引号的形式
+
+/*********************************************************************/
+
 // 对字符进行处理
 Token TokenAnalyze::char_con(char ch)
 {
+	//string value;
+	//filein.get(ch); // 先读入一个，最开始的单引号过滤掉
+	//value += ch; //
+	//filein.get(ch);
+	//if(ch != '\'')
+	//{
+	//	error_handler.error(3,line_number);
+	//	return Token(value,token_type::UNKNOWN,line_number);
+	//}
+	//else 
+	//	return Token(value,token_type::CHARCON,line_number);
+
 	string value;
-	filein.get(ch); // 先读入一个，最开始的单引号过滤掉
-	value += ch; //
+	value += ch; // 首先将传递进来的ch加入
+	filein.get(ch);
+	value += ch;
 	filein.get(ch);
 	if(ch != '\'')
 	{
-		cout << "error" << endl;
+		error_handler.error(3,line_number);
+		return Token(value,token_type::UNKNOWN,line_number);
 	}
 	else 
+	{
+		value += ch;  // 这里不用多读
 		return Token(value,token_type::CHARCON,line_number);
+	}
+
 }
 
 // 对字符串的处理
 Token TokenAnalyze::string_con(char ch)
 {
-	string value;
+	//string value;
+	//do
+	//{
+	//	if(ch == '"')
+	//		continue;
+	//	if(ch == '\n')  // 字符串中不能够包含换行符
+	//	{
+	//		cout << "error" << endl;
+	//	}
+	//	value += ch;
+	//}while(filein.get(ch) && ch != '"');
+	//// 这里不用回退，因为对于字符串后面是单引号的。
+	//return Token(value,token_type::STRCON,line_number);
 
+	string value;
 	do
 	{
-		if(ch == '"')
-			continue;
 		if(ch == '\n')  // 字符串中不能够包含换行符
 		{
-			cout << "error" << endl;
+			error_handler.error(11,line_number);
 		}
 		value += ch;
 	}while(filein.get(ch) && ch != '"');
 	// 这里不用回退，因为对于字符串后面是单引号的。
+	value += ch;
 	return Token(value,token_type::STRCON,line_number);
+
 }
 
 // 加法运算法的处理
@@ -320,6 +405,8 @@ Token TokenAnalyze::add_operator(char ch)
 		return Token(value,token_type::PLUS,line_number);
 	else if(ch == '-')  // 减号
 		return Token(value,token_type::MINU,line_number);
+	else 
+		return Token(value,token_type::UNKNOWN,line_number);
 }
 
 // 乘法运算符处理
@@ -331,6 +418,8 @@ Token TokenAnalyze::multiply_operator(char ch)
 		return Token(value,token_type::MULT,line_number);
 	else if(ch == '/') // 除号
 		return Token(value,token_type::DIV,line_number);
+	else
+		return Token(value,token_type::UNKNOWN,line_number);
 }
 
 // 对于赋值符号或者等于的比较符号的判断
@@ -385,7 +474,7 @@ Token TokenAnalyze::relation_operator(char ch)
 			return Token(value,token_type::GRE,line_number);
 		}
 	}
-	else
+	else  // 不等于的情况
 	{
 		filein.get(ch);
 		if(ch == '=')
@@ -394,7 +483,10 @@ Token TokenAnalyze::relation_operator(char ch)
 			return Token(value,token_type::NEQ,line_number);
 		}
 		else
-			cout << "error" << endl;
+		{
+			error_handler.error(2,line_number);
+			return Token(value,token_type::UNKNOWN,line_number);
+		}
 	}
 }
 

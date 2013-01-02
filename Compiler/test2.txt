@@ -1,0 +1,37 @@
+const int a1=1,a2=2,a3=3;
+const char a4='a',a5='b',a6='c';
+
+int b1,b2,b3;
+char b4,b5,b6;
+int d[5];
+
+int func1(int a1, int a2)
+{
+b1 = a1+a2;
+return (b1);
+}
+
+void func2(int a1, char a4)
+{
+b2=a1*a4;
+}
+
+void main()
+{
+int c1;
+int c2;
+int c3;
+
+c1=4;
+c2=a1+c1;
+printf(c2);
+
+scanf(c1,c2,c3);
+printf("c1+c2=",c1+c2);
+
+c3=func1(a1,a2);
+printf("c3=",c3);
+
+func2(a1,a4);
+printf(b2);
+}

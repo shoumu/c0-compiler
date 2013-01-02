@@ -1,0 +1,17 @@
+const int a = 1,
+	f = -1;
+int b[5], c, d;
+
+int func()
+{
+int f,g;
+scanf(f);
+return (f);
+}
+
+void main()
+{
+int a1, a2,a3;
+if(a >= func())
+c = 2;
+}

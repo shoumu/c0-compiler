@@ -7,6 +7,7 @@
 #include <map>
 #include <list>
 #include "commons.h"
+#include "Error.h"
 
 using namespace std;
 
@@ -39,10 +40,11 @@ private:
 class TokenAnalyze
 {
 public:
-	TokenAnalyze(string input);  // 输入流
+	//TokenAnalyze(string input);  // 输入流
+	TokenAnalyze();
 	Token next_token();  // 用这个方法获取下一个token
-	Token look_ahead();  // 超前读取
-
+	list<Token> look_ahead(int);  // 超前读取
+	void load_file(string filename);  // 载入文件
 
 	map<token_type,string> token_typename; // 这一个主要是token的名字对应的字符串，主要是为了词法分析的输出方便而已
 
@@ -53,6 +55,9 @@ private:
 	map<string,token_type> reservedWord; // 保留字
 	map<string,token_type> ssym; // 符号
 	list<Token> ahead_list; // 用来存储超前读取的部分
+
+	// error
+	Error error_handler;
 
 	//map<token_type,string> token_typename; // 这一个主要是token的名字对应的字符串，主要是为了词法分析的输出方便而已
 

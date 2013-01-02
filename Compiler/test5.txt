@@ -1,0 +1,49 @@
+const int AA=100,BB=200;
+int xx,yy,cc;
+
+void test1()
+{
+	const int a = 3,b=4;
+	int x,y;
+	x = y;
+	scanf(x);
+	scanf(y);
+	printf("a test=",a);
+	printf("b test=",b);
+	printf("x test =",x);
+	printf("y test=",y);
+}
+
+int test2()
+{
+	const float a = 3,b=4;
+	int x,y;
+	scanf(xx);
+	scanf(y);
+	printf("a test=",a);
+	printf("b test=",b);
+	printf("x test =",x);
+	printf("y test=",y);
+	return (0); 
+}
+
+void main()
+{
+	const float a = 7,b=8;
+	int x,y; 
+	float c; 
+	a = b;
+	c = -1+(2+x)*3/4; 
+	if(a>b)
+		c = -1+(2+x)*3/4;
+	else
+		c = 1+3/4;
+	scanf(y);
+	printf("a=",a);
+	printf("b=",b);
+	printf("x=",x);
+	printf("y=",y);
+	test1();
+	printf("A=",A);
+	printf("B=",B);
+}

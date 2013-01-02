@@ -77,11 +77,26 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="commons.h" />
+    <ClInclude Include="Error.h" />
+    <ClInclude Include="Parser.h" />
+    <ClInclude Include="Quaternion.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="SymbolTable.h" />
     <ClInclude Include="TokenAnalyze.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Error.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Parser.cpp" />
+    <ClCompile Include="Quaternion.cpp" />
+    <ClCompile Include="SymbolTable.cpp" />
     <ClCompile Include="TokenAnalyze.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Compiler.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="error_types.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
